@@ -1,3 +1,6 @@
+from lexer import Lexer
+
+
 class SemanticAnalyzer:
     def __init__(self):
         self.symbol_table = {}
@@ -40,3 +43,6 @@ def main():
     # Print any errors found during analysis
     for error in analyzer.errors:
         print(error)
+
+
+main()
