@@ -25,24 +25,21 @@ class SemanticAnalyzer:
             else:
                 print(f"Error: unknown node type {node_type}")
 
+from lexer import tokens, Lexer
+
 def main():
-    # Get input from user
-    input_string = input("Enter program to be analyzed:\n")
+    while True:
+        try:
+            input_string = input('Enter a mathematical expression: ')
+            Lexer.input(input_string)
+            for token in Lexer:
+                print(token)
+        except EOFError:
+            break
 
-    # Initialize the Lexer and Parser
-    lexer = Lexer(input_string)
-    parser = Parser(lexer)
+if __name__ == '__main__':
+    main()
 
-    # Generate the AST
-    ast = parser.parse()
-
-    # Initialize the SemanticAnalyzer and perform analysis on the AST
-    analyzer = SemanticAnalyzer()
-    analyzer.analyze(ast)
-
-    # Print any errors found during analysis
-    for error in analyzer.errors:
-        print(error)
 
 
 main()
