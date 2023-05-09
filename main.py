@@ -1,5 +1,3 @@
-from lexer import Lexer
-
 
 class SemanticAnalyzer:
     def __init__(self):
@@ -25,21 +23,47 @@ class SemanticAnalyzer:
             else:
                 print(f"Error: unknown node type {node_type}")
 
-from lexer import tokens, Lexer
+
+
+from lexer import lexer
+import ply.yacc as yacc
+
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
+)
+
+def p_statement_expr(p):
+    'statement : expression NEWLINE'
+    p[0] = p[1]
+
+def p_expression_binop(p):
+    '''expression : expression PLUS expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression'''
+    p[0] = (p[2], p[1], p[3])
+
+def p_expression_number(p):
+    'expression : NUMBER'
+    p[0] = p[1]
+
+def p_expression_id(p):
+    'expression : ID'
+    p[0] = ('ID', p[1])
+
+def p_error(p):
+    if p:
+        print("Syntax error at '%s'" % p.value)
+    else:
+        print("Syntax error at EOF")
+
+parser = yacc.yacc(debug=True, write_tables=False)
 
 def main():
-    while True:
-        try:
-            input_string = input('Enter a mathematical expression: ')
-            Lexer.input(input_string)
-            for token in Lexer:
-                print(token)
-        except EOFError:
-            break
-
-if __name__ == '__main__':
-    main()
-
-
+    input_string = input()
+    lexer.input(input_string)
+    ast = parser.parse(input_string, lexer=lexer)
+    print(ast)
 
 main()
