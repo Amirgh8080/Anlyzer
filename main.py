@@ -27,6 +27,7 @@ class SemanticAnalyzer:
 
 from lexer import lexer
 import ply.yacc as yacc
+from parser import *
 
 precedence = (
     ('left', 'PLUS', 'MINUS'),
@@ -58,7 +59,7 @@ def p_error(p):
     else:
         print("Syntax error at EOF")
 
-parser = yacc.yacc(debug=True, write_tables=False)
+# parser = yacc.yacc(debug=True, write_tables=False)
 
 def main():
     input_string = input()
